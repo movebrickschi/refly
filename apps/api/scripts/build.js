@@ -26,8 +26,8 @@ function copyPackageAssets() {
     console.log('Copying skill-template assets...');
     // Create destination directory if it doesn't exist
     fs.mkdirSync(distTemplates, { recursive: true });
-    // Copy templates recursively
-    execSync(`cp -r "${srcTemplates}/"* "${distTemplates}/"`, { stdio: 'inherit' });
+    // Copy templates recursively (cross-platform)
+    fs.cpSync(srcTemplates, distTemplates, { recursive: true });
     console.log('Assets copied successfully');
   }
 }
@@ -40,6 +40,7 @@ if (isFast) {
     {
       stdio: 'inherit',
       cwd: process.cwd(),
+      shell: true,
     },
   );
 
@@ -61,6 +62,7 @@ if (isFast) {
   const tscProcess = spawn('npx', tscArgs, {
     stdio: 'inherit',
     cwd: process.cwd(),
+    shell: true,
   });
 
   tscProcess.on('close', (code) => {
