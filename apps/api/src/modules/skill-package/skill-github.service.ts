@@ -10,6 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { Octokit } from '@octokit/rest';
 import { createAppAuth } from '@octokit/auth-app';
 import { SkillPackage, User } from '@prisma/client';
+import { safeParseJSON } from '@refly/utils';
 
 export interface GitHubSubmitResult {
   prUrl: string;
@@ -218,14 +219,17 @@ export class SkillGithubService {
     // In real usage, skillContent will be provided from CLI which has workflowId
     frontmatterLines.push('workflowId: see-workflow-mapping');
 
-    if (skill.triggers.length > 0) {
+    const triggers: string[] = safeParseJSON(skill.triggers) ?? [];
+    const tags: string[] = safeParseJSON(skill.tags) ?? [];
+
+    if (triggers.length > 0) {
       frontmatterLines.push('triggers:');
-      frontmatterLines.push(...skill.triggers.map((t) => `  - ${t}`));
+      frontmatterLines.push(...triggers.map((t) => `  - ${t}`));
     }
 
-    if (skill.tags.length > 0) {
+    if (tags.length > 0) {
       frontmatterLines.push('tags:');
-      frontmatterLines.push(...skill.tags.map((t) => `  - ${t}`));
+      frontmatterLines.push(...tags.map((t) => `  - ${t}`));
     }
 
     frontmatterLines.push(`version: ${skill.version}`);
@@ -261,13 +265,16 @@ The installation ID is returned when you run \`refly skill install\`.
    * Generate the README.md content
    */
   private generateReadme(skill: SkillPackage, user: User): string {
+    const parsedTriggers: string[] = safeParseJSON(skill.triggers) ?? [];
+    const parsedTags: string[] = safeParseJSON(skill.tags) ?? [];
+
     const triggersSection =
-      skill.triggers.length > 0
-        ? skill.triggers.map((t) => `- ${t}`).join('\n')
+      parsedTriggers.length > 0
+        ? parsedTriggers.map((t) => `- ${t}`).join('\n')
         : '- _(No triggers defined)_';
 
     const tagsSection =
-      skill.tags.length > 0 ? skill.tags.map((t) => `\`${t}\``).join(' ') : '_No tags_';
+      parsedTags.length > 0 ? parsedTags.map((t) => `\`${t}\``).join(' ') : '_No tags_';
 
     const authorName = user.name || user.nickname || 'Anonymous';
 

@@ -7,7 +7,7 @@
 #
 # Exposed ports (4xxxx prefix to avoid conflicts with local dev 3xxxx):
 #   API:          45800
-#   PostgreSQL:   45432
+#   MySQL:        43306
 #   MinIO API:    49000
 #   MinIO Console:49001
 #   Redis:        46379
@@ -57,7 +57,7 @@ services:
       file: docker-compose.base.yml
       service: db
     ports:
-      - "45432:5432"
+      - "43306:3306"
 
   minio:
     extends:

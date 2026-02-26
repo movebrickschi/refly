@@ -1265,7 +1265,7 @@ export class ShareCreationService {
         ? generateCoverUrl(workflowApp.coverStorageKey)
         : undefined,
       templateContent: workflowApp.templateContent,
-      resultNodeIds: workflowApp.resultNodeIds,
+      resultNodeIds: safeParseJSON(workflowApp.resultNodeIds) ?? [],
       query: workflowApp.query,
       variables: safeParseJSON(workflowApp.variables || '[]'),
       creditUsage: creditUsage,

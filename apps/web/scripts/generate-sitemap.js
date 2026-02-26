@@ -53,10 +53,23 @@ ${sitemapEntries}
  * Fetch public workflow templates from API
  */
 async function fetchPublicTemplates() {
+  // Skip fetching templates if API is localhost (not available during build)
+  if (API_URL.includes('localhost') || API_URL.includes('127.0.0.1')) {
+    console.log('⚠ Skipping template fetch: API is localhost (not available during build)');
+    return [];
+  }
+
   try {
-    const response = await fetch(`${API_URL}/v1/template/list?scope=public&page=1&pageSize=1000`);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const response = await fetch(`${API_URL}/v1/template/list?scope=public&page=1&pageSize=1000`, {
+      signal: controller.signal,
+    });
+    clearTimeout(timeout);
+
     if (!response.ok) {
-      console.warn(`Failed to fetch templates: ${response.statusText}`);
+      console.warn(`⚠ Failed to fetch templates: ${response.statusText}`);
       return [];
     }
 
@@ -71,7 +84,11 @@ async function fetchPublicTemplates() {
     }
     return [];
   } catch (error) {
-    console.warn('Error fetching templates:', error);
+    if (error.name === 'AbortError') {
+      console.warn('⚠ Template fetch timed out, skipping...');
+    } else {
+      console.warn('⚠ Could not fetch templates (API may not be running), skipping...');
+    }
     return [];
   }
 }

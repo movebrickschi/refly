@@ -1310,8 +1310,12 @@ export class DriveService implements OnModuleInit {
     }
 
     // Bulk create all drive files
-    const createdFiles = await this.prisma.driveFile.createManyAndReturn({
+    await this.prisma.driveFile.createMany({
       data: driveFilesData,
+    });
+
+    const createdFiles = await this.prisma.driveFile.findMany({
+      where: { fileId: { in: driveFilesData.map((d) => d.fileId) } },
     });
 
     // Trigger async parsing for each file (fire-and-forget)

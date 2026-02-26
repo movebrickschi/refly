@@ -437,8 +437,8 @@ export class SkillInstallationService {
     const packageUpdateData: Record<string, unknown> = {
       ...(dto.name !== undefined && { name: dto.name }),
       ...(dto.description !== undefined && { description: dto.description }),
-      ...(dto.triggers !== undefined && { triggers: dto.triggers }),
-      ...(dto.tags !== undefined && { tags: dto.tags }),
+      ...(dto.triggers !== undefined && { triggers: JSON.stringify(dto.triggers) }),
+      ...(dto.tags !== undefined && { tags: JSON.stringify(dto.tags) }),
       ...(dto.version !== undefined && { version: dto.version }),
     };
 
@@ -937,8 +937,8 @@ export class SkillInstallationService {
             version: skillPackage.version,
             description: skillPackage.description ?? undefined,
             uid: skillPackage.uid,
-            triggers: skillPackage.triggers,
-            tags: skillPackage.tags,
+            triggers: safeParseJSON(skillPackage.triggers) ?? [],
+            tags: safeParseJSON(skillPackage.tags) ?? [],
             status: skillPackage.status,
             isPublic: skillPackage.isPublic,
             downloadCount: skillPackage.downloadCount,

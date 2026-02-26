@@ -61,7 +61,7 @@ Cypress.Commands.add('execSQL', (query: string) => {
   const tempFile = '/tmp/cypress-sql-query.sql';
   cy.writeFile(tempFile, query);
 
-  const command = `docker exec -i refly_db psql -tA '${Cypress.env('databaseUrl')}' < ${tempFile}`;
+  const command = `docker exec -i refly_db mysql -u refly -ptest refly < ${tempFile}`;
 
   cy.log(`Executing SQL command: ${command}`);
 

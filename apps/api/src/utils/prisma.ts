@@ -52,7 +52,7 @@ export const migrateDbSchema = (): void => {
 /**
  * Seeds the database by executing SQL files from the seed-data directory.
  * Files are executed in alphabetical order (use numeric prefixes like 001_, 002_).
- * SQL should use ON CONFLICT DO NOTHING for idempotency.
+ * SQL should use INSERT IGNORE for idempotency.
  * Controlled by AUTO_SEED_DATA environment variable.
  */
 export const seedDatabase = async (): Promise<void> => {

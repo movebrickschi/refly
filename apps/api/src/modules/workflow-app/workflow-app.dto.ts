@@ -38,7 +38,7 @@ export function workflowAppPO2DTO(
     canvasId: app.canvasId ?? '',
     query: app.query ?? undefined,
     variables: safeParseJSON(app.variables),
-    resultNodeIds: app.resultNodeIds ?? [],
+    resultNodeIds: safeParseJSON(app.resultNodeIds) ?? [],
     coverUrl: (app as any).coverStorageKey
       ? generateCoverUrl((app as any).coverStorageKey)
       : undefined,

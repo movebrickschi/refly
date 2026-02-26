@@ -15,15 +15,15 @@ function synchronizeSqliteSchema() {
 
   // 1. Change the datasource provider to sqlite
   mainSchema = mainSchema.replace(
-    /datasource db {[^}]*provider\s*=\s*"postgresql"[^}]*}/s,
+    /datasource db {[^}]*provider\s*=\s*"mysql"[^}]*}/s,
     'datasource db {\n  provider = "sqlite"\n  url      = env("DATABASE_URL")\n}',
   );
 
   // 2. Change only BigInt types in @id annotations to Int
   mainSchema = mainSchema.replace(/pk\s+BigInt\s+@id/g, 'pk Int @id');
 
-  // 3. Remove all @db.Timestamptz() notations
-  mainSchema = mainSchema.replace(/@db\.Timestamptz\(\)/g, '');
+  // 3. Remove all @db.Timestamp(6) notations
+  mainSchema = mainSchema.replace(/@db\.Timestamp\(6\)/g, '');
 
   // 4. Remove all other database specific attributes
   mainSchema = mainSchema.replace(/@db\.[a-zA-Z0-9()]+/g, '');

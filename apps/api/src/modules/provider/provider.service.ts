@@ -1308,18 +1308,22 @@ export class ProviderService implements OnModuleInit {
       throw new ParamsError('Invalid provider IDs');
     }
 
-    return this.prisma.providerItem.createManyAndReturn({
-      data: items.map((item) => ({
-        itemId: genProviderItemID(),
-        category: item.category,
-        name: item.name,
-        providerId: item.providerId,
-        enabled: item.enabled,
-        order: item.order,
-        group: item.group,
-        uid: user.uid,
-        config: JSON.stringify(item.config),
-      })),
+    const dataItems = items.map((item) => ({
+      itemId: genProviderItemID(),
+      category: item.category,
+      name: item.name,
+      providerId: item.providerId,
+      enabled: item.enabled,
+      order: item.order,
+      group: item.group,
+      uid: user.uid,
+      config: JSON.stringify(item.config),
+    }));
+
+    await this.prisma.providerItem.createMany({ data: dataItems });
+
+    return this.prisma.providerItem.findMany({
+      where: { itemId: { in: dataItems.map((d) => d.itemId) } },
     });
   }
 

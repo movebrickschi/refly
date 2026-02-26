@@ -10,6 +10,7 @@ import {
   genSkillPackageWorkflowID,
   genSkillPackageInstallationID,
   genInviteCode,
+  safeParseJSON,
 } from '@refly/utils';
 import {
   CreateSkillPackageDto,
@@ -61,8 +62,8 @@ export class SkillPackageService {
         description: input.description,
         uid: user.uid,
         icon: input.icon ? JSON.stringify(input.icon) : null,
-        triggers: input.triggers ?? [],
-        tags: input.tags ?? [],
+        triggers: JSON.stringify(input.triggers ?? []),
+        tags: JSON.stringify(input.tags ?? []),
         inputSchema: input.inputSchema ? JSON.stringify(input.inputSchema) : null,
         outputSchema: input.outputSchema ? JSON.stringify(input.outputSchema) : null,
         status: 'draft',
@@ -214,8 +215,8 @@ export class SkillPackageService {
             description: input.description,
             uid: user.uid,
             icon: input.icon ? JSON.stringify(input.icon) : null,
-            triggers: input.triggers ?? [],
-            tags: input.tags ?? [],
+            triggers: JSON.stringify(input.triggers ?? []),
+            tags: JSON.stringify(input.tags ?? []),
             inputSchema: finalInputSchema ? JSON.stringify(finalInputSchema) : null,
             outputSchema: input.outputSchema ? JSON.stringify(input.outputSchema) : null,
             status: 'draft',
@@ -340,8 +341,8 @@ export class SkillPackageService {
     if (input.version !== undefined) updateData.version = input.version;
     if (input.description !== undefined) updateData.description = input.description;
     if (input.icon !== undefined) updateData.icon = JSON.stringify(input.icon);
-    if (input.triggers !== undefined) updateData.triggers = input.triggers;
-    if (input.tags !== undefined) updateData.tags = input.tags;
+    if (input.triggers !== undefined) updateData.triggers = JSON.stringify(input.triggers);
+    if (input.tags !== undefined) updateData.tags = JSON.stringify(input.tags);
     if (input.inputSchema !== undefined) updateData.inputSchema = JSON.stringify(input.inputSchema);
     if (input.outputSchema !== undefined)
       updateData.outputSchema = JSON.stringify(input.outputSchema);
@@ -428,7 +429,8 @@ export class SkillPackageService {
 
     const normalizedTags = this.normalizeTags(filter.tags);
     if (normalizedTags.length > 0) {
-      where.tags = { hasSome: normalizedTags };
+      // For MySQL, tags are stored as JSON string; match any tag using OR contains
+      where.AND = normalizedTags.map((tag) => ({ tags: { contains: tag } }));
     }
 
     const [items, total] = await Promise.all([
@@ -582,8 +584,8 @@ export class SkillPackageService {
         data: {
           name: parsedMeta.name,
           description: parsedMeta.description,
-          triggers: parsedMeta.triggers ?? [],
-          tags: parsedMeta.tags ?? [],
+          triggers: JSON.stringify(parsedMeta.triggers ?? []),
+          tags: JSON.stringify(parsedMeta.tags ?? []),
           version: parsedMeta.version ?? existing.version,
         },
       });
@@ -664,15 +666,16 @@ export class SkillPackageService {
 
     if (searchText) {
       where.OR = [
-        { name: { contains: searchText, mode: 'insensitive' } },
-        { description: { contains: searchText, mode: 'insensitive' } },
-        { triggers: { hasSome: [searchText] } },
+        { name: { contains: searchText } },
+        { description: { contains: searchText } },
+        { triggers: { contains: searchText } },
       ];
     }
 
     const normalizedTags = this.normalizeTags(query.tags);
     if (normalizedTags.length > 0) {
-      where.tags = { hasSome: normalizedTags };
+      // For MySQL, tags are stored as JSON string; match any tag using OR contains
+      where.AND = normalizedTags.map((tag) => ({ tags: { contains: tag } }));
     }
 
     const [items, total] = await Promise.all([
@@ -926,8 +929,8 @@ export class SkillPackageService {
       description: skillPackage.description ?? undefined,
       uid: skillPackage.uid,
       icon: skillPackage.icon ? JSON.parse(skillPackage.icon) : undefined,
-      triggers: skillPackage.triggers,
-      tags: skillPackage.tags,
+      triggers: safeParseJSON(skillPackage.triggers) ?? [],
+      tags: safeParseJSON(skillPackage.tags) ?? [],
       inputSchema: skillPackage.inputSchema ? JSON.parse(skillPackage.inputSchema) : undefined,
       outputSchema: skillPackage.outputSchema ? JSON.parse(skillPackage.outputSchema) : undefined,
       status: skillPackage.status,

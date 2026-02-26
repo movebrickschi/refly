@@ -8,8 +8,8 @@ ports:
     onOpen: open-preview
     visibility: public
     protocol: http
-  - port: 5432
-    name: PostgreSQL
+  - port: 3306
+    name: MySQL
     visibility: private
   - port: 6379
     name: Redis

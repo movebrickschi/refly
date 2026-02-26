@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -15,7 +15,7 @@ model Account {
   uid               String   @default("") @map("uid")
   /// Account type
   type              String   @map("type")
-  /// Provider  
+  /// Provider
   provider          String   @map("provider")
   /// Provider account ID
   providerAccountId String   @map("provider_account_id")
@@ -28,9 +28,9 @@ model Account {
   /// Scope (JSON array)
   scope             String?  @default("[]") @map("scope")
   /// Create timestamp
-  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@unique([provider, providerAccountId])
   @@map("accounts")
@@ -50,9 +50,9 @@ model VerificationSession {
   /// Hashed password
   hashedPassword String?  @map("hashed_password")
   /// Expiration timestamp
-  expiresAt      DateTime @map("expires_at") @db.Timestamptz()
+  expiresAt      DateTime @map("expires_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   @@index([email, code])
   @@map("verification_sessions")
@@ -72,7 +72,7 @@ model User {
   /// Avatar url
   avatar         String?   @map("avatar")
   /// Email verified timestamp
-  emailVerified  DateTime? @map("email_verified") @db.Timestamptz()
+  emailVerified  DateTime? @map("email_verified") @db.Timestamp(6)
   /// Password
   password       String?   @map("password")
   /// UI language setting
@@ -90,9 +90,9 @@ model User {
   /// Stripe subscription ID
   subscriptionId String?   @map("subscription_id")
   /// Create timestamp
-  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@map("users")
 }
@@ -112,13 +112,13 @@ model UserApiKey {
   /// Key name/description
   name       String    @map("name")
   /// Last used timestamp
-  lastUsedAt DateTime? @map("last_used_at") @db.Timestamptz()
+  lastUsedAt DateTime? @map("last_used_at") @db.Timestamp(6)
   /// Expiration timestamp (null = never expires)
-  expiresAt  DateTime? @map("expires_at") @db.Timestamptz()
+  expiresAt  DateTime? @map("expires_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Revoked timestamp (soft delete)
-  revokedAt  DateTime? @map("revoked_at") @db.Timestamptz()
+  revokedAt  DateTime? @map("revoked_at") @db.Timestamp(6)
 
   @@index([uid, revokedAt])
   @@index([keyHash])
@@ -191,9 +191,9 @@ model ActionResult {
   /// Parent result id
   parentResultId          String?      @map("parent_result_id")
   /// Create timestamp
-  createdAt               DateTime     @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt               DateTime     @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt               DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt               DateTime     @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@unique([resultId, version])
   @@index([targetType, targetId])
@@ -228,11 +228,11 @@ model ActionStep {
   /// Token usage summary (JSON array)
   tokenUsage       String    @default("[]") @map("token_usage")
   /// Create timestamp
-  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([resultId, version, order])
   @@map("action_steps")
@@ -260,9 +260,9 @@ model ActionMessage {
   /// Tool call id
   toolCallId       String?  @map("tool_call_id")
   /// Create timestamp
-  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([resultId, version])
   @@map("action_messages")
@@ -280,9 +280,9 @@ model CopilotSession {
   /// Canvas id
   canvasId  String   @map("canvas_id")
   /// Create timestamp
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([uid, canvasId])
   @@map("copilot_sessions")
@@ -310,9 +310,9 @@ model WorkflowPlan {
   /// Copilot session id
   copilotSessionId String   @map("copilot_session_id")
   /// Create timestamp
-  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([planId, version])
   @@index([resultId, resultVersion])
@@ -356,9 +356,9 @@ model WorkflowExecution {
   triggerType      String  @default("manual") @map("trigger_type")
 
   /// Create timestamp
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([uid, canvasId])
   @@index([scheduleId, createdAt])
@@ -402,15 +402,15 @@ model WorkflowNodeExecution {
   /// Child node ids (JSON array)
   childNodeIds    String    @default("[]") @map("child_node_ids")
   /// Execution start time
-  startTime       DateTime? @map("start_time") @db.Timestamptz()
+  startTime       DateTime? @map("start_time") @db.Timestamp(6)
   /// Execution end time
-  endTime         DateTime? @map("end_time") @db.Timestamptz()
+  endTime         DateTime? @map("end_time") @db.Timestamp(6)
   /// Error message if failed
   errorMessage    String?   @map("error_message")
   /// Create timestamp
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([executionId, nodeId])
   @@index([executionId, status])
@@ -457,9 +457,9 @@ model TokenUsage {
   /// Cache write tokens (from prompt caching)
   cacheWriteTokens Int      @default(0) @map("cache_write_tokens")
   /// Create timestamp
-  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt        DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt        DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([uid, createdAt])
   @@index([originalModelId, createdAt])
@@ -488,13 +488,13 @@ model StaticFile {
   /// Visibility
   visibility        String    @default("private") @map("visibility")
   /// Expiration timestamp
-  expiredAt         DateTime? @map("expired_at") @db.Timestamptz()
+  expiredAt         DateTime? @map("expired_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt         DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt         DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([entityId, entityType])
   @@index([storageKey])
@@ -529,11 +529,11 @@ model Canvas {
   /// Whether this canvas is visible in lists
   visibility        Boolean        @default(true) @map("visibility")
   /// Create timestamp
-  createdAt         DateTime       @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt         DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt         DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt         DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt         DateTime?      @map("deleted_at") @db.Timestamptz()
+  deletedAt         DateTime?      @map("deleted_at") @db.Timestamp(6)
   /// Project id
   Resource          Resource[]
   Document          Document[]
@@ -558,11 +558,11 @@ model CanvasVersion {
   /// Canvas state storage key
   stateStorageKey String    @map("state_storage_key")
   /// Create timestamp
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([canvasId, version])
   @@map("canvas_versions")
@@ -602,11 +602,11 @@ model CanvasTemplate {
   /// Language code
   language        String    @map("language")
   /// Create timestamp
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([uid, updatedAt])
   @@index([isPublic, priority])
@@ -625,11 +625,11 @@ model CanvasTemplateCategory {
   /// Description dictionary (JSON)
   descriptionDict String    @map("description_dict")
   /// Create timestamp
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@map("canvas_template_categories")
 }
@@ -642,11 +642,11 @@ model CanvasTemplateCategoryRelation {
   /// Category id
   categoryId String    @map("category_id")
   /// Create timestamp
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt  DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt  DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@unique([templateId, categoryId])
   @@index([templateId, deletedAt])
@@ -666,9 +666,9 @@ model CanvasEntityRelation {
   /// Whether the canvas is public
   isPublic   Boolean   @default(false) @map("is_public")
   /// Create timestamp
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt  DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt  DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([canvasId, deletedAt])
   @@index([entityType, entityId, deletedAt])
@@ -691,9 +691,9 @@ model FileParseRecord {
   /// Storage key
   storageKey  String   @map("storage_key")
   /// Create timestamp
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([uid, createdAt])
   @@map("file_parse_records")
@@ -735,11 +735,11 @@ model Resource {
   /// Resource metadata
   meta           String    @map("meta")
   /// Create timestamp
-  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt      DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt      DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([uid, identifier, deletedAt, updatedAt])
   @@map("resources")
@@ -769,11 +769,11 @@ model Document {
   /// Whether this document is readonly
   readOnly        Boolean   @default(false) @map("read_only")
   /// Create timestamp
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamp(6)
   /// Canvas id
   canvasId        String?   @map("canvas_id")
   /// Canvas
@@ -809,11 +809,11 @@ model CodeArtifact {
   /// Canvas
   canvas            Canvas?   @relation(fields: [canvasId], references: [canvasId])
   /// Create timestamp
-  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt         DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt         DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@map("code_artifacts")
 }
@@ -850,11 +850,11 @@ model DriveFile {
   /// Action result version (when source is 'agent')
   resultVersion Int?      @map("result_version")
   /// Drive file create timestamp
-  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt     DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt     DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([canvasId, deletedAt, updatedAt])
   @@map("drive_files")
@@ -900,15 +900,15 @@ model WorkflowApp {
   /// Review remarks/notes from admin
   remarks                  String?   @map("remarks")
   /// Result node IDs
-  resultNodeIds            String[]  @default([]) @map("result_node_ids")
+  resultNodeIds            String    @default("[]") @map("result_node_ids")
   /// Credit usage for running this workflow app
   creditUsage              Int?      @map("credit_usage")
   /// Create timestamp
-  createdAt                DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt                DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt                DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt                DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt                DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt                DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([canvasId, deletedAt])
   @@index([shareId])
@@ -940,11 +940,11 @@ model ShareRecord {
   /// Canvas template id
   templateId       String?   @map("template_id")
   /// Create timestamp
-  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([entityType, entityId, deletedAt])
   @@map("share_records")
@@ -966,11 +966,11 @@ model DuplicateRecord {
   /// Status (pending, finish, failed)
   status     String    @default("pending") @map("status")
   /// Create timestamp
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt  DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt  DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@unique([sourceId, targetId])
   @@index([targetId])
@@ -1001,13 +1001,13 @@ model SkillInstance {
   /// Skill template config (JSON)
   tplConfig        String?   @map("tpl_config")
   /// Whether this skill is pinned
-  pinnedAt         DateTime? @map("pinned_at") @db.Timestamptz()
+  pinnedAt         DateTime? @map("pinned_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp
-  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([uid, updatedAt])
   @@map("skill_instances")
@@ -1041,11 +1041,11 @@ model SkillTrigger {
   /// Bull job id (for timer trigger)
   bullJobId       String?   @map("bull_job_id")
   /// Create timestamp
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp
-  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([skillId, deletedAt])
   @@map("skill_triggers")
@@ -1067,11 +1067,11 @@ model LabelClass {
   /// Label creation instruction prompt
   prompt       String          @map("prompt")
   /// Create timestamp
-  createdAt    DateTime        @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt    DateTime        @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt    DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt    DateTime        @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp
-  deletedAt    DateTime?       @map("deleted_at") @db.Timestamptz()
+  deletedAt    DateTime?       @map("deleted_at") @db.Timestamp(6)
   /// Related labels
   labels       LabelInstance[]
 
@@ -1098,11 +1098,11 @@ model LabelInstance {
   /// UID
   uid          String     @map("uid")
   /// Create timestamp
-  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt    DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt    DateTime   @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp
-  deletedAt    DateTime?  @map("deleted_at") @db.Timestamptz()
+  deletedAt    DateTime?  @map("deleted_at") @db.Timestamp(6)
 
   @@index([entityType, entityId])
   @@map("label_instances")
@@ -1132,11 +1132,11 @@ model Provider {
   /// Whether the provider is enabled
   enabled     Boolean        @default(true) @map("enabled")
   /// Create timestamp
-  createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt   DateTime       @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt   DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt   DateTime       @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp
-  deletedAt   DateTime?      @map("deleted_at") @db.Timestamptz()
+  deletedAt   DateTime?      @map("deleted_at") @db.Timestamp(6)
   /// Model items
   items       ProviderItem[]
 
@@ -1173,11 +1173,11 @@ model ProviderItem {
   /// Related global provider item ID
   globalItemId  String?   @map("global_item_id")
   /// Create timestamp
-  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp
-  deletedAt     DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt     DateTime? @map("deleted_at") @db.Timestamp(6)
   /// Provider
   provider      Provider  @relation(fields: [providerId], references: [providerId])
 
@@ -1220,9 +1220,9 @@ model SubscriptionPlan {
   fileUploadLimit      Int     @default(-1) @map("file_upload_limit")
 
   /// Create timestamp
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@unique([planType, interval])
   @@map("subscription_plans")
@@ -1244,9 +1244,9 @@ model CreditPackPlan {
   /// Display description
   description String?  @map("description")
   /// Create timestamp
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@map("credit_pack_plans")
 }
@@ -1271,11 +1271,11 @@ model Subscription {
   /// Override plan quota (JSON string)
   overridePlan   String?   @map("override_plan")
   /// Cancel timestamp
-  cancelAt       DateTime? @map("cancel_at") @db.Timestamptz()
+  cancelAt       DateTime? @map("cancel_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([uid])
   @@index([status, cancelAt])
@@ -1292,9 +1292,9 @@ model TokenUsageMeter {
   /// Subscription ID
   subscriptionId String?   @map("subscription_id")
   /// Meter start timestamp
-  startAt        DateTime  @map("start_at") @db.Timestamptz()
+  startAt        DateTime  @map("start_at") @db.Timestamp(6)
   /// Meter end timestamp
-  endAt          DateTime? @map("end_at") @db.Timestamptz()
+  endAt          DateTime? @map("end_at") @db.Timestamp(6)
   /// Request count quota (T1)
   t1CountQuota   Int       @default(0) @map("t1_count_quota")
   /// Request count used (T1)
@@ -1312,11 +1312,11 @@ model TokenUsageMeter {
   /// Token used (T2)
   t2TokenUsed    Int       @default(0) @map("t2_token_used")
   /// Create timestamp
-  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp
-  deletedAt      DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt      DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([uid, deletedAt])
   @@map("token_usage_meters")
@@ -1344,11 +1344,11 @@ model CreditRecharge {
   /// Extra data (JSON)
   extraData   String?  @map("extra_data")
   /// Expiration timestamp (30 days from creation)
-  expiresAt   DateTime @map("expires_at") @db.Timestamptz()
+  expiresAt   DateTime @map("expires_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([uid, createdAt])
   @@index([uid, enabled, createdAt])
@@ -1376,9 +1376,9 @@ model CreditDebt {
   /// Debt description
   description String?  @map("description")
   /// Create timestamp
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([uid, enabled, createdAt])
   @@map("credit_debts")
@@ -1418,7 +1418,7 @@ model CreditUsage {
   /// Model usage details for skill execution (JSON array of model usage)
   modelUsageDetails String?  @map("model_usage_details")
   /// Create timestamp
-  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   @@index([uid, createdAt])
   @@index([providerItemId, createdAt])
@@ -1438,9 +1438,9 @@ model InvitationCode {
   /// Invitation status: pending, accepted, expired
   status     String   @default("pending") @map("status")
   /// Create timestamp
-  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt  DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@unique([inviterUid, inviteeUid])
   @@index([inviterUid])
@@ -1460,7 +1460,7 @@ model StorageUsageMeter {
   subscriptionId     String?   @map("subscription_id")
   /// File count quota
   fileCountQuota     Int       @default(10) @map("file_count_quota")
-  /// File count used 
+  /// File count used
   fileCountUsed      Int       @default(0) @map("file_count_used")
   /// Object storage quota (in bytes), including resource, canvas and static files
   objectStorageQuota BigInt    @default(0) @map("object_storage_quota")
@@ -1477,13 +1477,13 @@ model StorageUsageMeter {
   /// Vector storage size used (in bytes)
   vectorStorageUsed  BigInt    @default(0) @map("vector_storage_used")
   /// Last synced timestamp
-  syncedAt           DateTime? @map("synced_at") @db.Timestamptz()
+  syncedAt           DateTime? @map("synced_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt          DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt          DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp
-  deletedAt          DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt          DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([uid, deletedAt])
   @@map("storage_usage_meters")
@@ -1511,9 +1511,9 @@ model ModelInfo {
   /// Whether this model is the default model
   isDefault    Boolean  @default(false) @map("is_default")
   /// Create timestamp
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@map("model_infos")
 }
@@ -1540,9 +1540,9 @@ model CheckoutSession {
   /// Source (canvas, template, pricing, etc.)
   source         String?  @map("source")
   /// Create timestamp
-  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt      DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([sessionId])
   @@map("checkout_sessions")
@@ -1560,11 +1560,11 @@ model RefreshToken {
   /// Whether the token has been revoked
   revoked     Boolean  @default(false) @map("revoked")
   /// Expiration timestamp
-  expiresAt   DateTime @map("expires_at") @db.Timestamptz()
+  expiresAt   DateTime @map("expires_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt   DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([uid])
   @@map("refresh_tokens")
@@ -1585,16 +1585,16 @@ model Page {
   description     String?   @map("description")
   /// Page state storage key (for storing edit state)
   stateStorageKey String    @map("state_storage_key")
-  /// Cover storage key 
+  /// Cover storage key
   coverStorageKey String?   @map("cover_storage_key")
   /// Page status
   status          String    @default("draft") @map("status") // draft, publishing, published
   /// Create timestamp
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamp(6)
 
   /// Associated versions
   versions PageVersion[]
@@ -1622,11 +1622,11 @@ model PageNodeRelation {
   /// Node data (storing node metadata)
   nodeData   String    @default("{}") @map("node_data")
   /// Create timestamp
-  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt  DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt  DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt  DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt  DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([pageId, deletedAt])
   @@map("page_node_relations")
@@ -1648,7 +1648,7 @@ model PageVersion {
   /// Cover storage key
   coverStorageKey   String?  @map("cover_storage_key")
   /// Create timestamp
-  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   /// Page association
   page Page @relation(fields: [pageId], references: [pageId])
@@ -1683,11 +1683,11 @@ model Toolset {
   /// Toolset credit billing
   creditBilling String?   @map("credit_billing")
   /// Create timestamp
-  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt     DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp
-  deletedAt     DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt     DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([uid, isGlobal, deletedAt])
   @@index([key, enabled])
@@ -1720,11 +1720,11 @@ model ToolMethod {
   /// Whether the method is enabled
   enabled        Boolean   @default(true) @map("enabled")
   /// Create timestamp
-  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp (soft delete)
-  deletedAt      DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt      DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@unique([inventoryKey, name, versionId])
   @@index([versionId])
@@ -1755,11 +1755,11 @@ model ToolsetInventory {
   /// Credit billing info (in JSON format)
   creditBilling   String?   @map("credit_billing") @db.Text
   /// Create timestamp
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp (soft delete)
-  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([key])
   @@map("toolset_inventory")
@@ -1779,13 +1779,13 @@ model ComposioConnection {
   /// Integration metadata (JSON)
   metadata           String?   @map("metadata")
   /// Token expiration timestamp
-  expiresAt          DateTime? @map("expires_at") @db.Timestamptz()
+  expiresAt          DateTime? @map("expires_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt          DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt          DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt          DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt          DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt          DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@unique([uid, integrationId])
   @@index([status])
@@ -1819,11 +1819,11 @@ model ToolCallResult {
   /// Error message
   error     String?   @map("error")
   /// Create timestamp
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp
-  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([resultId, version])
   @@index([toolsetId, deletedAt])
@@ -1859,11 +1859,11 @@ model McpServer {
   /// Whether the server is enabled
   enabled   Boolean   @default(true) @map("enabled")
   /// Create timestamp
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Deletion timestamp
-  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@unique([uid, name])
   @@index([uid, deletedAt])
@@ -1896,9 +1896,9 @@ model DriveFileParseCache {
   /// Metadata (JSON) - stores lambdaJobId, etc.
   metadata          String?  @map("metadata")
   /// Create timestamp
-  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([uid, createdAt])
   @@index([parseStatus])
@@ -1934,11 +1934,11 @@ model VariableExtractionHistory {
   /// Status: pending(candidate) | applied(already applied) | expired(expired)
   status               String    @default("pending") @map("status")
   /// Applied timestamp (when candidate mode converts to direct mode)
-  appliedAt            DateTime? @map("applied_at") @db.Timestamptz()
+  appliedAt            DateTime? @map("applied_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt            DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt            DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt            DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([canvasId, uid, createdAt])
   @@index([triggerType, extractionMode])
@@ -1964,11 +1964,11 @@ model FormDefinition {
   /// Form status
   status      String    @default("draft") @map("status")
   /// Create timestamp
-  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt   DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt   DateTime? @map("deleted_at") @db.Timestamp(6)
 
   /// Form submissions
   submissions FormSubmission[]
@@ -1989,9 +1989,9 @@ model FormSubmission {
   /// Submission status
   status    String   @default("draft") @map("status")
   /// Create timestamp
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   /// Associated form definition
   form FormDefinition @relation(fields: [formId], references: [formId])
@@ -2009,11 +2009,11 @@ model PromptSuggestion {
   /// Metadata (JSON)
   metadata  String    @map("metadata")
   /// Create timestamp
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@map("prompt_suggestions")
 }
@@ -2037,17 +2037,17 @@ model Voucher {
   /// LLM score that generated this voucher (0-100)
   llmScore          Int?      @map("llm_score")
   /// Expiration timestamp (created_at + 7 days)
-  expiresAt         DateTime  @map("expires_at") @db.Timestamptz()
+  expiresAt         DateTime  @map("expires_at") @db.Timestamp(6)
   /// Used timestamp
-  usedAt            DateTime? @map("used_at") @db.Timestamptz()
+  usedAt            DateTime? @map("used_at") @db.Timestamp(6)
   /// Subscription ID when used
   subscriptionId    String?   @map("subscription_id")
   /// Stripe Promotion Code ID
   stripePromoCodeId String?   @map("stripe_promo_code_id")
   /// Create timestamp
-  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt         DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([uid, status, expiresAt])
   @@index([status, expiresAt])
@@ -2065,9 +2065,9 @@ model StripeCoupon {
   /// Whether this coupon is active
   isActive        Boolean  @default(true) @map("is_active")
   /// Create timestamp
-  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt       DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt       DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@map("stripe_coupons")
 }
@@ -2091,13 +2091,13 @@ model VoucherInvitation {
   /// Invitation status: unclaimed, claimed, expired
   status          String    @default("unclaimed") @map("status")
   /// Claimed timestamp
-  claimedAt       DateTime? @map("claimed_at") @db.Timestamptz()
+  claimedAt       DateTime? @map("claimed_at") @db.Timestamp(6)
   /// Whether inviter reward (2000 credits) has been granted
   rewardGranted   Boolean   @default(false) @map("reward_granted")
   /// Create timestamp
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([inviterUid, status])
   @@index([inviteeUid])
@@ -2119,7 +2119,7 @@ model VoucherPopupLog {
   /// Voucher ID generated from this popup
   voucherId  String?  @map("voucher_id")
   /// Create timestamp
-  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   @@index([uid, popupDate])
   @@index([voucherId])
@@ -2145,15 +2145,15 @@ model PromotionActivity {
   /// English landing page URL (optional)
   landingPageUrlEn String?   @map("landing_page_url_en")
   /// Display positions (JSON array): ["dashboard", "marketplace"]
-  positions        String[]  @default([]) @map("positions")
+  positions        String    @default("[]") @map("positions")
   /// Activity status: draft, published, unpublished
   status           String    @default("draft") @map("status")
   /// Create timestamp
-  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@index([status, deletedAt])
   @@index([createdAt])
@@ -2164,7 +2164,7 @@ model PromotionActivity {
 model AutoModelRoutingRule {
   pk BigInt @id @default(autoincrement())
 
-  ruleId   String @unique @default(uuid()) @map("rule_id")
+  ruleId   String @unique @default(cuid()) @map("rule_id")
   ruleName String @map("rule_name")
 
   /// Scene. "copilot" | "agent"
@@ -2183,17 +2183,17 @@ model AutoModelRoutingRule {
 
   enabled Boolean @default(true) @map("enabled")
 
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
-  @@index([scene, enabled, priority(sort: Desc), ruleId])
+  @@index([scene, enabled, priority, ruleId])
   @@map("auto_model_routing_rules")
 }
 
 /// Auto model routing result for tracking routing decisions
 model AutoModelRoutingResult {
   pk              BigInt @id @default(autoincrement())
-  routingResultId String @unique @default(uuid()) @map("routing_result_id")
+  routingResultId String @unique @default(cuid()) @map("routing_result_id")
 
   userId String @map("user_id")
 
@@ -2217,10 +2217,10 @@ model AutoModelRoutingResult {
   selectedItemId  String  @map("selected_item_id")
   selectedModelId String  @map("selected_model_id")
 
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   @@unique([actionResultId, actionResultVersion])
-  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, createdAt])
   @@map("auto_model_routing_results")
 }
 
@@ -2253,22 +2253,22 @@ model WorkflowSchedule {
 
   // ========== Runtime Status ==========
   /// Next run time
-  nextRunAt DateTime? @map("next_run_at") @db.Timestamptz()
+  nextRunAt DateTime? @map("next_run_at") @db.Timestamp(6)
 
   /// Last run time
-  lastRunAt DateTime? @map("last_run_at") @db.Timestamptz()
+  lastRunAt DateTime? @map("last_run_at") @db.Timestamp(6)
 
   // ========== Audit Fields ==========
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
-  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
+  deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
 
   // ========== Unique Constraints ==========
   /// Ensure one schedule per canvas per user (prevents concurrent creation race condition)
   @@unique([canvasId, uid])
   // ========== Indexes ==========
   @@index([isEnabled, deletedAt, nextRunAt])
-  @@index([uid, deletedAt, createdAt(sort: Desc)]) // List query optimization
+  @@index([uid, deletedAt, createdAt]) // List query optimization
   @@map("workflow_schedules")
 }
 
@@ -2313,13 +2313,13 @@ model WorkflowScheduleRecord {
   // ========== Scheduling Info ==========
 
   /// Planned execution time
-  scheduledAt DateTime @map("scheduled_at") @db.Timestamptz()
+  scheduledAt DateTime @map("scheduled_at") @db.Timestamp(6)
 
   /// Actual triggered time
-  triggeredAt DateTime @default(now()) @map("triggered_at") @db.Timestamptz()
+  triggeredAt DateTime @default(now()) @map("triggered_at") @db.Timestamp(6)
 
   /// Completion time
-  completedAt DateTime? @map("completed_at") @db.Timestamptz()
+  completedAt DateTime? @map("completed_at") @db.Timestamp(6)
 
   // ========== Error Info ==========
 
@@ -2335,13 +2335,13 @@ model WorkflowScheduleRecord {
   snapshotStorageKey String? @map("snapshot_storage_key")
 
   // ========== Audit Fields ==========
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz()
-  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   // ========== Indexes ==========
   @@index([scheduleId, scheduledAt])
-  @@index([uid, status, completedAt(sort: Desc)]) // Priority calculation optimization (replaced createdAt)
-  @@index([uid, status, scheduledAt(sort: Desc)]) // List query optimization
+  @@index([uid, status, completedAt]) // Priority calculation optimization (replaced createdAt)
+  @@index([uid, status, scheduledAt]) // List query optimization
   @@map("workflow_schedule_records")
 }
 
@@ -2378,9 +2378,9 @@ model LambdaJob {
   /// Metadata (JSON)
   metadata      String?  @map("metadata")
   /// Create timestamp
-  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([uid, createdAt])
   @@index([status, createdAt])
@@ -2413,11 +2413,11 @@ model CliDeviceSession {
   /// Refresh token (set when authorized, hashed for security)
   refreshToken String?  @map("refresh_token")
   /// Expiration timestamp (short TTL: 5-10 minutes)
-  expiresAt    DateTime @map("expires_at") @db.Timestamptz()
+  expiresAt    DateTime @map("expires_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp (when status changes)
-  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt    DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@index([status, expiresAt])
   @@index([uid, createdAt])
@@ -2441,9 +2441,9 @@ model SkillPackage {
   /// Package icon (JSON)
   icon            String?   @map("icon")
   /// Triggers for activation
-  triggers        String[]  @default([]) @map("triggers")
+  triggers        String    @default("[]") @map("triggers")
   /// Category tags
-  tags            String[]  @default([]) @map("tags")
+  tags            String    @default("[]") @map("tags")
   /// MCP configuration (JSON) - NOT yet implemented, reserved for MCP integration
   mcpConfig       String?   @map("mcp_config")
   /// Input schema (JSON) - NOT yet implemented
@@ -2461,18 +2461,18 @@ model SkillPackage {
   /// Share ID for public access
   shareId         String?   @map("share_id")
   /// Create timestamp
-  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt       DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt       DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt       DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt       DateTime? @map("deleted_at") @db.Timestamp(6)
 
   /// GitHub Registry - PR number
   githubPrNumber    Int?      @map("github_pr_number")
   /// GitHub Registry - PR URL
   githubPrUrl       String?   @map("github_pr_url")
   /// GitHub Registry - submission timestamp
-  githubSubmittedAt DateTime? @map("github_submitted_at") @db.Timestamptz()
+  githubSubmittedAt DateTime? @map("github_submitted_at") @db.Timestamp(6)
 
   /// Relation to workflows
   workflows     SkillWorkflow[]
@@ -2510,11 +2510,11 @@ model SkillWorkflow {
   /// Whether this is the entry workflow (no dependencies, execution starts here)
   isEntry          Boolean   @default(false) @map("is_entry")
   /// Create timestamp
-  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamp(6)
 
   /// Parent skill package
   skillPackage SkillPackage              @relation(fields: [skillId], references: [skillId])
@@ -2548,7 +2548,7 @@ model SkillWorkflowDependency {
   /// Custom merge expression (used only when mergeStrategy = custom) - NOT yet implemented
   customMerge          String?  @map("custom_merge")
   /// Create timestamp
-  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamp(6)
 
   /// Relations
   dependentWorkflow  SkillWorkflow @relation("DependentWorkflow", fields: [dependentWorkflowId], references: [skillWorkflowId])
@@ -2584,11 +2584,11 @@ model SkillInstallation {
   /// Available version for upgrade (if hasUpdate = true)
   availableVersion String?   @map("available_version")
   /// Create timestamp
-  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp (uninstalled)
-  deletedAt        DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt        DateTime? @map("deleted_at") @db.Timestamp(6)
 
   /// Parent skill package
   skillPackage SkillPackage     @relation(fields: [skillId], references: [skillId])
@@ -2625,13 +2625,13 @@ model SkillExecution {
   /// Error message if failed
   errorMessage   String?   @map("error_message")
   /// Execution started timestamp
-  startedAt      DateTime? @map("started_at") @db.Timestamptz()
+  startedAt      DateTime? @map("started_at") @db.Timestamp(6)
   /// Execution completed timestamp
-  completedAt    DateTime? @map("completed_at") @db.Timestamptz()
+  completedAt    DateTime? @map("completed_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt      DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt      DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   /// Relation to workflow executions
   workflowExecutions SkillExecutionWorkflow[]
@@ -2670,11 +2670,11 @@ model SkillExecutionWorkflow {
   /// Retry count
   retryCount          Int       @default(0) @map("retry_count")
   /// Execution started timestamp
-  startedAt           DateTime? @map("started_at") @db.Timestamptz()
+  startedAt           DateTime? @map("started_at") @db.Timestamp(6)
   /// Execution completed timestamp
-  completedAt         DateTime? @map("completed_at") @db.Timestamptz()
+  completedAt         DateTime? @map("completed_at") @db.Timestamp(6)
   /// Create timestamp
-  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
 
   /// Parent skill execution
   execution SkillExecution @relation(fields: [executionId], references: [executionId])
@@ -2699,11 +2699,11 @@ model WorkflowWebhook {
   /// Timeout in seconds
   timeout   Int       @default(30) @map("timeout")
   /// Create timestamp
-  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt DateTime  @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
   /// Soft delete timestamp
-  deletedAt DateTime? @map("deleted_at") @db.Timestamptz()
+  deletedAt DateTime? @map("deleted_at") @db.Timestamp(6)
 
   @@unique([canvasId, uid])
   @@index([apiId], map: "idx_workflow_webhooks_api_id")
@@ -2722,9 +2722,9 @@ model WorkflowOpenapiConfig {
   /// Result node IDs (JSON array of node IDs marked as output)
   resultNodeIds String?  @map("result_node_ids")
   /// Create timestamp
-  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   /// Update timestamp
-  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+  updatedAt     DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamp(6)
 
   @@unique([canvasId, uid])
   @@index([uid])
@@ -2770,12 +2770,12 @@ model ApiCallRecord {
   /// Failure reason
   failureReason       String?   @map("failure_reason")
   /// Create timestamp
-  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamptz()
+  createdAt           DateTime  @default(now()) @map("created_at") @db.Timestamp(6)
   /// Completed timestamp
-  completedAt         DateTime? @map("completed_at") @db.Timestamptz()
+  completedAt         DateTime? @map("completed_at") @db.Timestamp(6)
 
   @@index([uid])
   @@index([apiId])
-  @@index([createdAt(sort: Desc)])
+  @@index([createdAt])
   @@map("api_call_records")
 }

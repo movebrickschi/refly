@@ -492,7 +492,6 @@ export class ScheduleService {
     if (keyword) {
       where.workflowTitle = {
         contains: keyword,
-        mode: 'insensitive',
       };
     }
 

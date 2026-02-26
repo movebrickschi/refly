@@ -31,7 +31,7 @@ interface CodeInterpreterAPISettings {
   // Production Settings
   HISTORY_BACKEND?: string;
   REDIS_URL: string;
-  POSTGRES_URL: string;
+  MYSQL_URL: string;
 
   // CodeBox
   CODEBOX_API_KEY?: string;
@@ -65,8 +65,7 @@ export const settings: CodeInterpreterAPISettings = {
   // Production Settings
   HISTORY_BACKEND: process.env.HISTORY_BACKEND,
   REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',
-  POSTGRES_URL:
-    process.env.POSTGRES_URL || 'postgresql://postgres:postgres@localhost:5432/postgres',
+  MYSQL_URL: process.env.MYSQL_URL || 'mysql://root:test@localhost:3306/sandbox',
 
   // CodeBox
   CODEBOX_API_KEY: process.env.CODEBOX_API_KEY,

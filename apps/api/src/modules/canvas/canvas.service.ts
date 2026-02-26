@@ -128,7 +128,6 @@ export class CanvasService {
     if (keyword?.trim()) {
       where.title = {
         contains: keyword.trim(),
-        mode: 'insensitive',
       };
     }
 

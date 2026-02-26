@@ -446,7 +446,7 @@ export class OpenapiService {
     };
 
     if (keyword) {
-      where.title = { contains: keyword, mode: 'insensitive' };
+      where.title = { contains: keyword };
     }
 
     const canvases = await this.prisma.canvas.findMany({

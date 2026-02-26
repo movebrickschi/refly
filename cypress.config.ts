@@ -9,7 +9,7 @@ export default defineConfig({
     retries: 2,
     baseUrl: 'http://localhost:5173',
     env: {
-      databaseUrl: 'postgresql://refly:test@localhost:5432/refly',
+      databaseUrl: 'mysql://refly:test@localhost:3306/refly',
     },
   },
 });

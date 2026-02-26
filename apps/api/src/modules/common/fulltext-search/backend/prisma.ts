@@ -7,13 +7,13 @@ import { FulltextDocument, FulltextSearchBackend } from './interface';
 export class PrismaFulltextSearchBackend implements FulltextSearchBackend {
   private readonly logger = new Logger(PrismaFulltextSearchBackend.name);
   private initialized = false;
-  private database: 'sqlite' | 'postgresql' = 'sqlite';
+  private database: 'sqlite' | 'mysql' = 'sqlite';
 
   constructor(private readonly prisma: PrismaService) {
     if (process.env.DATABASE_URL?.startsWith('file:')) {
       this.database = 'sqlite';
     } else {
-      this.database = 'postgresql';
+      this.database = 'mysql';
     }
   }
 
@@ -123,7 +123,6 @@ export class PrismaFulltextSearchBackend implements FulltextSearchBackend {
           {
             title: {
               contains: req.query,
-              ...(this.database === 'postgresql' && { mode: 'insensitive' }),
             },
           },
         ],
@@ -166,7 +165,6 @@ export class PrismaFulltextSearchBackend implements FulltextSearchBackend {
           {
             title: {
               contains: req.query,
-              ...(this.database === 'postgresql' && { mode: 'insensitive' }),
             },
           },
         ],
@@ -209,7 +207,6 @@ export class PrismaFulltextSearchBackend implements FulltextSearchBackend {
           {
             title: {
               contains: req.query,
-              ...(this.database === 'postgresql' && { mode: 'insensitive' }),
             },
           },
         ],

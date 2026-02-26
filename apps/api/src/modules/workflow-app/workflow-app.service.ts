@@ -350,7 +350,7 @@ export class WorkflowAppService {
           remixEnabled,
           publishToCommunity,
           publishReviewStatus: publishToCommunity ? 'reviewing' : 'init',
-          resultNodeIds,
+          resultNodeIds: JSON.stringify(resultNodeIds),
           creditUsage,
           updatedAt: new Date(),
           // Reset templateContent if invalid
@@ -379,7 +379,7 @@ export class WorkflowAppService {
           remixEnabled,
           publishToCommunity,
           publishReviewStatus: publishToCommunity ? 'reviewing' : 'init',
-          resultNodeIds,
+          resultNodeIds: JSON.stringify(resultNodeIds),
           creditUsage,
           // Set initial generation status
           templateGenerationStatus: shouldSkipGeneration ? 'idle' : 'pending',
@@ -872,9 +872,9 @@ export class WorkflowAppService {
     if (keyword?.trim()) {
       const searchKeyword = keyword.trim();
       whereClause.OR = [
-        { title: { contains: searchKeyword, mode: 'insensitive' } },
-        { description: { contains: searchKeyword, mode: 'insensitive' } },
-        { query: { contains: searchKeyword, mode: 'insensitive' } },
+        { title: { contains: searchKeyword } },
+        { description: { contains: searchKeyword } },
+        { query: { contains: searchKeyword } },
       ];
     }
 
