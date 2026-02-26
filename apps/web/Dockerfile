@@ -41,30 +41,28 @@ WORKDIR /usr/share/nginx/html
 COPY --from=builder /app/apps/web/dist .
 
 # Create config.js template (will be processed by envsubst at container startup)
-RUN cat << 'EOF' > /usr/share/nginx/html/config.template.js
-window.ENV = {
-  API_URL: "$API_URL" || undefined,
-  COLLAB_URL: "$COLLAB_URL" || undefined,
-  STATIC_PUBLIC_ENDPOINT: "$STATIC_PUBLIC_ENDPOINT" || undefined,
-  STATIC_PRIVATE_ENDPOINT: "$STATIC_PRIVATE_ENDPOINT" || undefined,
-  SUBSCRIPTION_ENABLED: "$SUBSCRIPTION_ENABLED" === "true",
-  CANVAS_TEMPLATE_ENABLED: "$CANVAS_TEMPLATE_ENABLED" === "true",
-  SENTRY_ENABLED: "$SENTRY_ENABLED" === "true",
-  ENV_TAG: "$ENV_TAG" || undefined,
-  DEPLOY_TYPE: "$DEPLOY_TYPE" || undefined,
-};
-EOF
+RUN printf '%s\n' \
+  'window.ENV = {' \
+  '  API_URL: "$API_URL" || undefined,' \
+  '  COLLAB_URL: "$COLLAB_URL" || undefined,' \
+  '  STATIC_PUBLIC_ENDPOINT: "$STATIC_PUBLIC_ENDPOINT" || undefined,' \
+  '  STATIC_PRIVATE_ENDPOINT: "$STATIC_PRIVATE_ENDPOINT" || undefined,' \
+  '  SUBSCRIPTION_ENABLED: "$SUBSCRIPTION_ENABLED" === "true",' \
+  '  CANVAS_TEMPLATE_ENABLED: "$CANVAS_TEMPLATE_ENABLED" === "true",' \
+  '  SENTRY_ENABLED: "$SENTRY_ENABLED" === "true",' \
+  '  ENV_TAG: "$ENV_TAG" || undefined,' \
+  '  DEPLOY_TYPE: "$DEPLOY_TYPE" || undefined,' \
+  '};' > /usr/share/nginx/html/config.template.js
 
 # Create entrypoint script
-RUN cat << 'EOF' > /docker-entrypoint.sh
-#!/bin/bash
-set -e
-
-# Generate runtime config.js from template
-envsubst < /usr/share/nginx/html/config.template.js > /usr/share/nginx/html/config.js
-
-exec nginx -g "daemon off;"
-EOF
+RUN printf '%s\n' \
+  '#!/bin/bash' \
+  'set -e' \
+  '' \
+  '# Generate runtime config.js from template' \
+  'envsubst < /usr/share/nginx/html/config.template.js > /usr/share/nginx/html/config.js' \
+  '' \
+  'exec nginx -g "daemon off;"' > /docker-entrypoint.sh
 
 RUN chmod +x /docker-entrypoint.sh
 

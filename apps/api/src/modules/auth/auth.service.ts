@@ -267,9 +267,11 @@ export class AuthService {
   }
 
   cookieOptions(key: string): CookieOptions {
+    const rawDomain = this.configService.get('auth.cookie.domain');
+    const rawSecure = this.configService.get('auth.cookie.secure');
     const baseOptions: CookieOptions = {
-      domain: this.configService.get('auth.cookie.domain'),
-      secure: Boolean(this.configService.get('auth.cookie.secure')),
+      ...(rawDomain ? { domain: rawDomain } : {}),
+      secure: rawSecure === 'true' || rawSecure === true,
       sameSite: this.configService.get('auth.cookie.sameSite'),
       path: '/',
     };

@@ -6,19 +6,19 @@
 name: refly
 
 include:
-  - path: docker-compose.base.yml
+  - path: docker-compose.middleware.yml
 
 services:
   api:
     extends:
       file: docker-compose.services.yml
       service: api
-    image: reflyai/refly-api:latest
+    image: refly-api:latest
 
   web:
     extends:
       file: docker-compose.services.yml
       service: web
-    image: reflyai/refly-web:latest
+    image: refly-web:latest
     ports:
       - 5700:80
