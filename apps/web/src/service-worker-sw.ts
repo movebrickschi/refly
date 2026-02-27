@@ -77,9 +77,7 @@ const normalizeHtmlCacheKey = (request: Request): string => {
 
 const isSsrPath = (path: string): boolean => {
   return (
-    path === '/pricing' ||
-    path.startsWith('/workflow-marketplace') ||
-    path.startsWith('/workflow-template')
+    path === '/pricing' || path.startsWith('/marketplace') || path.startsWith('/workflow-template')
   );
 };
 

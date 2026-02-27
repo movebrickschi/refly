@@ -45,7 +45,7 @@ const MAX_DISPLAY_COUNT = 12;
 
 interface TemplateListProps {
   source: 'front-page' | 'template-library';
-  language: string;
+  language?: string;
   categoryId: string;
   searchQuery?: string;
   scrollableTargetId: string;
@@ -75,8 +75,8 @@ export const TemplateList = ({
   const { data, isLoading, isFetching } = useListCanvasTemplates(
     {
       query: {
-        language,
-        categoryId: categoryId === 'my-templates' ? undefined : categoryId,
+        language: language || undefined,
+        categoryId: categoryId === 'my-templates' ? undefined : categoryId || undefined,
         scope: categoryId === 'my-templates' ? 'private' : 'public',
         searchQuery,
         pageSize: 20,
@@ -155,7 +155,7 @@ export const TemplateList = ({
   );
 
   const handleGoToMarketplace = useCallback(() => {
-    window.open('/workflow-marketplace', '_blank');
+    window.open('/marketplace', '_blank');
   }, []);
 
   const viewMoreSection = (

@@ -124,12 +124,6 @@ async function generateMainSitemap() {
       changefreq: 'daily',
       priority: 0.9,
     },
-    {
-      loc: `${BASE_URL}/workflow-marketplace`,
-      lastmod: now,
-      changefreq: 'daily',
-      priority: 0.9,
-    },
   ];
 
   return generateSitemapXML(staticUrls);
@@ -174,7 +168,6 @@ async function main() {
   console.log('Generating sitemaps...');
   console.log(`Base URL: ${BASE_URL}`);
   console.log(`API URL: ${API_URL}`);
-  console.log(`Marketplace sitemap: ${BASE_URL}/workflow-marketplace/sitemap.xml`);
 
   try {
     // Generate main sitemap
@@ -196,11 +189,7 @@ async function main() {
     writeFileSync(join(publicPath, 'sitemap-templates.xml'), templatesSitemap, 'utf-8');
 
     // Generate sitemap index
-    const sitemapList = [
-      `${BASE_URL}/sitemap.xml`,
-      `${BASE_URL}/sitemap-templates.xml`,
-      `${BASE_URL}/workflow-marketplace/sitemap.xml`,
-    ];
+    const sitemapList = [`${BASE_URL}/sitemap.xml`, `${BASE_URL}/sitemap-templates.xml`];
     const sitemapIndex = generateSitemapIndex(sitemapList);
     const sitemapIndexPath = join(distPath, 'sitemap_index.xml');
     writeFileSync(sitemapIndexPath, sitemapIndex, 'utf-8');

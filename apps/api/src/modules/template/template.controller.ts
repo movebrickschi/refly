@@ -29,6 +29,7 @@ export class TemplateController {
   async listCanvasTemplates(
     @LoginedUser() user: User | null,
     @Query('categoryId') categoryId: string,
+    @Query('language') language: string,
     @Query('scope', new DefaultValuePipe('public')) scope: 'public' | 'private',
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('pageSize', new DefaultValuePipe(10), ParseIntPipe) pageSize: number,
@@ -38,6 +39,7 @@ export class TemplateController {
       pageSize,
       scope,
       categoryId,
+      language,
     });
     return buildSuccessResponse(templates.map(canvasTemplatePO2DTO));
   }

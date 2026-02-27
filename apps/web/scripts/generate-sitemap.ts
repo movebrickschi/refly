@@ -109,12 +109,6 @@ async function generateMainSitemap(): Promise<string> {
       changefreq: 'daily',
       priority: 0.9,
     },
-    {
-      loc: `${BASE_URL}/workflow-marketplace`,
-      lastmod: now,
-      changefreq: 'daily',
-      priority: 0.9,
-    },
   ];
 
   return generateSitemapXML(staticUrls);
@@ -195,9 +189,7 @@ async function main() {
   }
 }
 
-// Run if executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
-  main();
-}
+// Run the main function
+main();
 
 export { generateMainSitemap, generateTemplatesSitemap, generateSitemapIndex };
