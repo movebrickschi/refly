@@ -1,24 +1,24 @@
 services:
-  db:
-    container_name: ${REFLY_CONTAINER_NAME_PREFIX:-refly}_db
-    image: mysql:5.7
-    restart: always
-    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-allowed-packet=256M
-    volumes:
-      - db_data:/var/lib/mysql
-    environment:
-      - MYSQL_DATABASE=refly
-      - MYSQL_USER=refly
-      - MYSQL_PASSWORD=test
-      - MYSQL_ROOT_PASSWORD=test
-    healthcheck:
-      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'refly', '-ptest']
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
-    networks:
-      - refly_network
+#  db:
+#    container_name: ${REFLY_CONTAINER_NAME_PREFIX:-refly}_db
+#    image: mysql:5.7
+#    restart: always
+#    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --max-allowed-packet=256M
+#    volumes:
+#      - db_data:/var/lib/mysql
+#    environment:
+#      - MYSQL_DATABASE=refly
+#      - MYSQL_USER=refly
+#      - MYSQL_PASSWORD=test
+#      - MYSQL_ROOT_PASSWORD=test
+#    healthcheck:
+#      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'refly', '-ptest']
+#      interval: 10s
+#      timeout: 5s
+#      retries: 3
+#      start_period: 30s
+#    networks:
+#      - refly_network
 
   minio:
     container_name: ${REFLY_CONTAINER_NAME_PREFIX:-refly}_minio
@@ -95,7 +95,7 @@ networks:
     driver: bridge
 
 volumes:
-  db_data:
+#  db_data:
   minio_data:
   redis_data:
   qdrant_data:

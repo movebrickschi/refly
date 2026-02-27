@@ -5,8 +5,8 @@ services:
   api:
     container_name: ${REFLY_CONTAINER_NAME_PREFIX:-refly}_api
     depends_on:
-      db:
-        condition: service_healthy
+#      db:
+#        condition: service_healthy
       minio:
         condition: service_healthy
       redis:
@@ -25,7 +25,7 @@ services:
       - MINIO_INTERNAL_ENDPOINT=minio
       - MINIO_EXTERNAL_ENDPOINT=minio
       - REDIS_HOST=redis
-      - DATABASE_URL=mysql://refly:test@db:3306/refly
+      - DATABASE_URL=mysql://buff8:HuiZhi190601%21%40%23@rm-bp1472wp69x6o9z5k3o.mysql.rds.aliyuncs.com:3306/refly_sit?schema=refly
       - QDRANT_HOST=qdrant
       - SEARXNG_BASE_URL=http://searxng:8080
       - ENDPOINT=/api

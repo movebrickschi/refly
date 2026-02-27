@@ -13,12 +13,12 @@ services:
     extends:
       file: docker-compose.services.yml
       service: api
-    image: refly-api:latest
+    image: registry.cn-hangzhou.aliyuncs.com/hzhuizhihuyu/refly-api:latest
 
   web:
     extends:
       file: docker-compose.services.yml
       service: web
-    image: refly-web:latest
+    image: registry.cn-hangzhou.aliyuncs.com/hzhuizhihuyu/refly-web:latest
     ports:
       - 5700:80
